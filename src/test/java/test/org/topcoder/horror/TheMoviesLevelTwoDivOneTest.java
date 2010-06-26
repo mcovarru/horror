@@ -1,5 +1,7 @@
 package test.org.topcoder.horror;
 
+import org.topcoder.horror.TheMoviesLevelTwoDivOne;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -10,6 +12,8 @@ import junit.framework.TestSuite;
 public class TheMoviesLevelTwoDivOneTest 
     extends TestCase
 {
+    private TheMoviesLevelTwoDivOne movieTester;
+
     /**
      * Create the test case
      *
@@ -27,12 +31,29 @@ public class TheMoviesLevelTwoDivOneTest
     {
         return new TestSuite( TheMoviesLevelTwoDivOneTest.class );
     }
+    
+    
+    public void setUp() {
+      this.movieTester = new TheMoviesLevelTwoDivOne();
+    }
+    
+    public void tearDown() {
+      this.movieTester = null;
+    }
 
     /**
-     * Rigourous Test :-)
+     * 
      */
-    public void testApp()
+    public void testWorks()
     {
-        assertTrue( true );
+      TheMoviesLevelTwoDivOne.Movie movie;
+      TheMoviesLevelTwoDivOne movieTester = new TheMoviesLevelTwoDivOne();
+      
+      movie = new TheMoviesLevelTwoDivOne.Movie(0, 100, 1);
+      
+      assertTrue(movieTester.works(movie, 74));
+      
+      movie = new TheMoviesLevelTwoDivOne.Movie(1, 100, 99);
+      assertFalse(movieTester.works(movie, 74));
     }
 }
