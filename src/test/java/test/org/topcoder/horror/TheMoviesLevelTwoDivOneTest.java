@@ -1,5 +1,7 @@
 package test.org.topcoder.horror;
 
+import java.util.Arrays;
+
 import org.topcoder.horror.TheMoviesLevelTwoDivOne;
 
 import junit.framework.Test;
@@ -47,13 +49,23 @@ public class TheMoviesLevelTwoDivOneTest
     public void testWorks()
     {
       TheMoviesLevelTwoDivOne.Movie movie;
-      TheMoviesLevelTwoDivOne movieTester = new TheMoviesLevelTwoDivOne();
       
       movie = new TheMoviesLevelTwoDivOne.Movie(0, 100, 1);
       
-      assertTrue(movieTester.works(movie, 74));
+      assertTrue(movie.works(74));
       
       movie = new TheMoviesLevelTwoDivOne.Movie(1, 100, 99);
-      assertFalse(movieTester.works(movie, 74));
+      assertFalse(movie.works(74));
+    }
+    
+    
+    
+    public void test0() {
+      int [] ret =  movieTester.find(new int [] {100, 50}, new int [] {1, 1});
+      System.out.print("ret is ");
+      for (int i = 0; i < ret.length; i++) System.out.print("" + ret[i] + " ");
+      System.out.println("");
+      assertTrue(Arrays.equals(new int [] {0, 1}, ret));
+
     }
 }

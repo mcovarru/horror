@@ -3,10 +3,7 @@ package org.topcoder.horror;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Hello world!
- *
- */
+
 public class TheMoviesLevelTwoDivOne 
 {
     public static class Movie {
@@ -29,6 +26,11 @@ public class TheMoviesLevelTwoDivOne
         return id;
       }
       
+      public boolean works(int currentSleepiness) {
+        return (currentSleepiness - scary > THRESHOLD_SLEEPINESS) &&
+          (currentSleepiness + SCARINESS_INCREMENT - length > THRESHOLD_SLEEPINESS);
+      }
+            
       
     }
     
@@ -62,10 +64,34 @@ public class TheMoviesLevelTwoDivOne
      * @param sleepiness
      * @return
      */
+
     
-    public boolean works(Movie movie, int currentSleepiness) {
-      return (currentSleepiness - movie.scary > THRESHOLD_SLEEPINESS) &&
-        (currentSleepiness + SCARINESS_INCREMENT - movie.length > THRESHOLD_SLEEPINESS);
+    
+    public boolean works(List moviesTaken, List moviesRemaining, int currentSleepiness) {
+      
+      if (moviesRemaining.size() == 0) return true;
+
+      for (int m = 0; m < moviesRemaining.size(); m++) {
+        Movie movie = (Movie) moviesRemaining.get(m);
+        if (movie.works(currentSleepiness)) {
+          currentSleepiness += (movie.length + SCARINESS_INCREMENT);
+          moviesTaken.add(moviesRemaining.get(m));
+          moviesRemaining.remove(m);
+          
+          // recurse with moviesTaken and moviesRemaining adjusted
+          if (works(moviesTaken, moviesRemaining, currentSleepiness))
+            return true;
+          
+          // can't find solution for this movie, backtrack
+          
+          // put this back where we found it
+          moviesRemaining.add(m, movie);
+          moviesTaken.remove(movie);
+          
+        }
+      }
+      
+      return false;
     }
     
     
@@ -74,9 +100,18 @@ public class TheMoviesLevelTwoDivOne
       
       for (int m = 0; m < length.length; m++)
         movies.add(new Movie(m, length[m], scary[m]));
-
-      int awakedness = INITIAL_SLEEPINESS;
       
-      return null;
+      List taken = new ArrayList();
+      
+      int awakedness = INITIAL_SLEEPINESS;
+      works(taken, movies, awakedness);
+      
+      int [] ret = new int[movies.size()];
+
+      for (int m = 0; m < movies.size(); m++)
+        ret[m] = ((Movie) movies.get(m)).id;
+      
+      return ret;
+      
     }
 }
