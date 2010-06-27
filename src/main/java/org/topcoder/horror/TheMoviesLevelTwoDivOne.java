@@ -74,7 +74,7 @@ public class TheMoviesLevelTwoDivOne
       for (int m = 0; m < moviesRemaining.size(); m++) {
         Movie movie = (Movie) moviesRemaining.get(m);
         if (movie.works(currentSleepiness)) {
-          currentSleepiness += (movie.length + SCARINESS_INCREMENT);
+          currentSleepiness = currentSleepiness - movie.length + SCARINESS_INCREMENT;
           moviesTaken.add(moviesRemaining.get(m));
           moviesRemaining.remove(m);
           
@@ -106,10 +106,10 @@ public class TheMoviesLevelTwoDivOne
       int awakedness = INITIAL_SLEEPINESS;
       works(taken, movies, awakedness);
       
-      int [] ret = new int[movies.size()];
+      int [] ret = new int[taken.size()];
 
-      for (int m = 0; m < movies.size(); m++)
-        ret[m] = ((Movie) movies.get(m)).id;
+      for (int m = 0; m < taken.size(); m++)
+        ret[m] = ((Movie) taken.get(m)).id;
       
       return ret;
       
