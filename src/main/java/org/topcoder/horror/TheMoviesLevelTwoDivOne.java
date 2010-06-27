@@ -28,30 +28,14 @@ public class TheMoviesLevelTwoDivOne
       }
       
       public boolean works(int currentSleepiness) {
-        // the sleepy minutes are before the scary minute, hence the -1
-        return (currentSleepiness - (scary - 1) > THRESHOLD_SLEEPINESS) &&
+        return (currentSleepiness - scary >= THRESHOLD_SLEEPINESS) &&
           (currentSleepiness + SCARINESS_INCREMENT - length > THRESHOLD_SLEEPINESS);
       }
             
       
     }
     
-    
-    /**
-     * We are to return in the lowest lexicographical order.  This compels us
-     * to try the movies in order, front to back.
-     * 
-     * Have a loop that proceeds in order across a list of movies.  Take the
-     * first movie off the list.  If this movie fails us, increment the loop.
-     * If this movie works, recurse on the tail of the list.  If we empty the 
-     * list, we are done!
-     * 
-     * 
-     * @param length
-     * @param scary
-     * @return
-     */
-    
+
     public static final int INITIAL_SLEEPINESS = 74;
     
     public static final int THRESHOLD_SLEEPINESS = 0;
@@ -69,13 +53,14 @@ public class TheMoviesLevelTwoDivOne
         if (movie.works(currentSleepiness)) {
           int oldSleepiness = currentSleepiness;
           currentSleepiness = currentSleepiness - movie.length + SCARINESS_INCREMENT;
-          moviesTaken.add(moviesRemaining.get(m));
-          moviesRemaining.remove(m);
+          moviesTaken.add(movie);
+          moviesRemaining.remove(movie);
           
           currentMovieList.add(movie);
           
           if (currentMovieList.size() > bestSoFarMovieList.size())
             bestSoFarMovieList = (List) currentMovieList.clone();
+          
           
           
           // recurse with moviesTaken and moviesRemaining adjusted
@@ -108,17 +93,18 @@ public class TheMoviesLevelTwoDivOne
       ArrayList movies = new ArrayList();
       bestSoFarMovieList = new ArrayList();
       currentMovieList = new ArrayList();
-      List moviesCopy = (List) movies.clone();
       
       for (int m = 0; m < length.length; m++)
         movies.add(new Movie(m, length[m], scary[m]));
+      
+      List moviesCopy = (List) movies.clone();
       
       List taken = new ArrayList();
       
       int awakedness = INITIAL_SLEEPINESS;
       works(taken, movies, awakedness);
       
-      Iterator iter = taken.iterator();
+      Iterator iter = bestSoFarMovieList.iterator();
       int m = 0;
       while (iter.hasNext()) {
         Movie movie = (Movie) iter.next();
