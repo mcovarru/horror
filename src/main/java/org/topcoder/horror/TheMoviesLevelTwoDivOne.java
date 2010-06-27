@@ -1,6 +1,7 @@
 package org.topcoder.horror;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -27,7 +28,8 @@ public class TheMoviesLevelTwoDivOne
       }
       
       public boolean works(int currentSleepiness) {
-        return (currentSleepiness - scary > THRESHOLD_SLEEPINESS) &&
+        // the sleepy minutes are before the scary minute, hence the -1
+        return (currentSleepiness - (scary - 1) > THRESHOLD_SLEEPINESS) &&
           (currentSleepiness + SCARINESS_INCREMENT - length > THRESHOLD_SLEEPINESS);
       }
             
@@ -56,15 +58,6 @@ public class TheMoviesLevelTwoDivOne
     
     public static final int SCARINESS_INCREMENT = 47;
     
-    /**
-     * if this movie works, take the movie off the remainingList and add it to the currentList
-     * if it does not work, 
-     * @param currentMovieList
-     * @param remainingMovieList
-     * @param sleepiness
-     * @return
-     */
-
     
     
     public boolean works(List moviesTaken, List moviesRemaining, int currentSleepiness) {
@@ -79,6 +72,12 @@ public class TheMoviesLevelTwoDivOne
           moviesTaken.add(moviesRemaining.get(m));
           moviesRemaining.remove(m);
           
+          currentMovieList.add(movie);
+          
+          if (currentMovieList.size() > bestSoFarMovieList.size())
+            bestSoFarMovieList = (List) currentMovieList.clone();
+          
+          
           // recurse with moviesTaken and moviesRemaining adjusted
           if (works(moviesTaken, moviesRemaining, currentSleepiness))
             return true;
@@ -88,6 +87,7 @@ public class TheMoviesLevelTwoDivOne
           // put this back where we found it
           moviesRemaining.add(m, movie);
           moviesTaken.remove(movie);
+          currentMovieList.remove(movie);
 
           currentSleepiness = oldSleepiness;
         }
@@ -96,9 +96,19 @@ public class TheMoviesLevelTwoDivOne
       return false;
     }
     
+    private List bestSoFarMovieList;
+    
+    private ArrayList currentMovieList;
+    
     
     public int [] find(int [] length, int [] scary) {
-      List movies = new ArrayList();
+      
+      int [] ret = new int[length.length];
+      
+      ArrayList movies = new ArrayList();
+      bestSoFarMovieList = new ArrayList();
+      currentMovieList = new ArrayList();
+      List moviesCopy = (List) movies.clone();
       
       for (int m = 0; m < length.length; m++)
         movies.add(new Movie(m, length[m], scary[m]));
@@ -108,11 +118,24 @@ public class TheMoviesLevelTwoDivOne
       int awakedness = INITIAL_SLEEPINESS;
       works(taken, movies, awakedness);
       
-      int [] ret = new int[taken.size()];
-
-      for (int m = 0; m < taken.size(); m++)
-        ret[m] = ((Movie) taken.get(m)).id;
+      Iterator iter = taken.iterator();
+      int m = 0;
+      while (iter.hasNext()) {
+        Movie movie = (Movie) iter.next();
+        ret[m] = movie.id;
+        moviesCopy.remove(movie);
+        m++;
+      }
       
+      iter = moviesCopy.iterator();
+      
+      while (iter.hasNext()) {
+        Movie movie = (Movie) iter.next();
+        ret[m] = movie.id;
+        m++;
+      }
+        
+    
       return ret;
       
     }

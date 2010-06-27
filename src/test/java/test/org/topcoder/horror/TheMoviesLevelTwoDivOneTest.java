@@ -58,26 +58,24 @@ public class TheMoviesLevelTwoDivOneTest
       assertFalse(movie.works(74));
     }
     
-    
-    
     public void test0() {
       int [] ret =  movieTester.find(new int [] {100, 50}, new int [] {1, 1});
 
       assertTrue(Arrays.equals(new int [] {0, 1}, ret));
     }
-    
+
     public void test1() {
       int [] ret =  movieTester.find(new int [] {100, 50}, new int [] {1, 49});
 
       assertTrue(Arrays.equals(new int [] {1, 0}, ret));
     }
-    
+
     public void test2() {
       int [] ret =  movieTester.find(new int [] {100, 100, 100, 100}, new int [] {77, 76, 75, 74});
 
       assertTrue(Arrays.equals(new int [] {3, 0, 1, 2}, ret));
     }
-    
+
     public void test3() {
       int [] ret =  movieTester.find(new int [] {100}, new int [] {99});
 
